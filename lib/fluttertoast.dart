@@ -294,6 +294,10 @@ class ToastStateFulState extends State<_ToastStateFul>
 
   /// Start the hidding animations for the toast
   hideIt() {
+    setState(() {
+      _startPos = 1;
+      _endPos = 0;
+    });
     _animationController!.reverse();
     _timer?.cancel();
   }
@@ -303,6 +307,8 @@ class ToastStateFulState extends State<_ToastStateFul>
   late Animation _fadeAnimation;
 
   Timer? _timer;
+  double _startPos = -1;
+  double _endPos = 0;
 
   @override
   void initState() {
@@ -336,14 +342,8 @@ class ToastStateFulState extends State<_ToastStateFul>
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _fadeAnimation as Animation<double>,
-      child: Center(
-        child: Material(
-          color: Colors.transparent,
-          child: widget.child,
-        ),
-      ),
-    );
+    return SlideTransition(
+        position: Tween(begin: Offset(_startPos, 0), end: Offset(_endPos, 0))
+            .animate(_fadeAnimation as Animation<double>));
   }
 }
